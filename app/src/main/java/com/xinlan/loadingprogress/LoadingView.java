@@ -1,26 +1,17 @@
 package com.xinlan.loadingprogress;
 
-import android.animation.Animator;
-import android.animation.AnimatorSet;
-import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.CornerPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.support.v4.animation.ValueAnimatorCompat;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AnimationSet;
-import android.view.animation.DecelerateInterpolator;
 
 /**
  * Created by panyi on 2016/10/27.
@@ -29,12 +20,8 @@ public class LoadingView extends View {
     public static final int STATUS_SHOW_PREVIEW = 1;
     public static final int STATUS_SHOW_LOADING = 2;
 
-    private static final double SQRT_THREE_HALF = Math.sqrt(3) / 2;
-    private static final double SQUARE_2 = Math.sqrt(2);
     private static final float SQUARE_3 = (float) Math.sqrt(3);
 
-    public static final int TRIGLE_MARGIN_DEFAULT = 5;
-    public static final int TRIAGE_PADDING = 5;
 
     public static final float CUBE_SCALE_DEFAULT = 0.8f;
 
@@ -49,22 +36,12 @@ public class LoadingView extends View {
 
     private float cubeLen = 0;
 
-    private int mUpTriglePosX = 0;
-    private int mUpTriglePosY = 0;
-    private int mDownTriglePosX = 0;
-    private int mDownTriglePosY = 0;
-
     private Paint mUpTriglePaint;
     private Paint mDownTriglePaint;
-
-    private int translateMin = 0;
-    private int translateMax = 0;
 
     private float cubeScale = CUBE_SCALE_DEFAULT;
 
     private Path mPath = new Path();
-
-    private AnimatorSet mLoadAnimator = new AnimatorSet();
 
     private long mAngle = 0;
 
@@ -177,7 +154,7 @@ public class LoadingView extends View {
     private void drawLoading(Canvas canvas) {
         canvas.save();
         mAngle += 1;
-        canvas.rotate(mAngle, getWidth() / 2, getHeight() / 2);
+        canvas.rotate(mAngle+90, getWidth() / 2, getHeight() / 2);
         drawUpTrigle(canvas);
         drawDownTrigle(canvas);
         canvas.restore();
@@ -278,78 +255,6 @@ public class LoadingView extends View {
         }
     }
 
-//    private void startLoadingAnimation() {
-//        final int maxAngle = 180;
-//        ValueAnimator mRotateLeftAnimator = ValueAnimator.ofInt(0, 180);
-//        mRotateLeftAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-//        mRotateLeftAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-//            @Override
-//            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-//                mAngle = (int) valueAnimator.getAnimatedValue();
-////                final int half = maxAngle / 2;
-////                if (mAngle <= half) {
-////                    mUpTriglePosX = translateMin + (translateMax - translateMin) * mAngle / half;
-////                    mDownTriglePosX = translateMax - (translateMax - translateMin) * (mAngle) / half;
-////                } else {
-////                    mUpTriglePosX = translateMax - (translateMax - translateMin) * (mAngle-half) / half;
-////                    mDownTriglePosX = translateMin + (translateMax - translateMin) *( mAngle-half) / half;
-////                }
-//                //mUpTriglePosX = translateMin;
-//                //mDownTriglePosX = translateMax;
-//                //mUpTriglePosX = ((translateMax - translateMin) * (180 + mAngle)) / maxAngle;
-//                //mUpTriglePosX = translateMin +(int)mAngle;
-//                //mDownTriglePosX = translateMax - (int)mAngle;
-//
-//                mUpTriglePosX = translateMin + (translateMax - translateMin) * mAngle / maxAngle;
-//                mDownTriglePosX = translateMax - (translateMax - translateMin) * (mAngle) / maxAngle;
-//                postInvalidate();
-//            }
-//        });
-//
-//        ValueAnimator mRotateRightAnimator = ValueAnimator.ofInt(180, 360);
-//        mRotateRightAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-//        mRotateRightAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-//            @Override
-//            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-//                //mAngle = (int) valueAnimator.getAnimatedValue();
-//                mUpTriglePosY = translateMax - (translateMax - translateMin) * (mAngle - maxAngle) / maxAngle;
-//                mDownTriglePosY = translateMin + (translateMax - translateMin) * (mAngle - maxAngle) / maxAngle;
-//
-////                mUpTriglePosX = translateMin + (translateMax - translateMin) * mAngle / maxAngle;
-////                mDownTriglePosX = translateMax - (translateMax - translateMin) * (mAngle) / maxAngle;
-//
-//                postInvalidate();
-//            }
-//        });
-//
-//
-//        mLoadAnimator.playSequentially(mRotateLeftAnimator, mRotateRightAnimator);
-//        mLoadAnimator.setDuration(1000);
-//
-//        mLoadAnimator.addListener(new Animator.AnimatorListener() {
-//            @Override
-//            public void onAnimationStart(Animator animator) {
-//
-//            }
-//
-//            @Override
-//            public void onAnimationEnd(Animator animator) {
-//                mLoadAnimator.start();
-//            }
-//
-//            @Override
-//            public void onAnimationCancel(Animator animator) {
-//
-//            }
-//
-//            @Override
-//            public void onAnimationRepeat(Animator animator) {
-//
-//            }
-//        });
-//        //set.start();
-//        mLoadAnimator.start();
-//    }
 
     private void drawUpTrigle(Canvas canvas) {
         mPath.reset();
@@ -379,7 +284,6 @@ public class LoadingView extends View {
     public void restart() {
         mStatus = STATUS_SHOW_PREVIEW;
         calTrigleCube();
-        mLoadAnimator.cancel();
         postInvalidate();
     }
 }//end class
