@@ -43,7 +43,7 @@ public class LoadingView extends View {
 
     private Path mPath = new Path();
 
-    private long mAngle = 0;
+    private float mAngle = 0;
 
     private float down_shape_x, down_shape_y;
     private float up_shape_x, up_shape_y;
@@ -153,8 +153,7 @@ public class LoadingView extends View {
 
     private void drawLoading(Canvas canvas) {
         canvas.save();
-        mAngle += 1;
-        canvas.rotate(mAngle+90, getWidth() / 2, getHeight() / 2);
+        canvas.rotate(mAngle + 90, getWidth() / 2, getHeight() / 2);
         drawUpTrigle(canvas);
         drawDownTrigle(canvas);
         canvas.restore();
@@ -183,6 +182,7 @@ public class LoadingView extends View {
 
         time = 0;
         shape_status = 0;
+        mAngle = 0;
 
         down_shape_x = keyPoints[5].x;
         down_shape_y = keyPoints[5].y;
@@ -248,7 +248,18 @@ public class LoadingView extends View {
         up_shape_y = ((-2) * (b_p2_y - b_p1_y) * time * time * time) / (T * T * T) + (3 * (b_p2_y - b_p1_y) * time * time) / (T * T) + b_p1_y;
 
 
-        time += 2;
+        //rotate
+        float v_min = 0.2f;
+        float angle = (v_min - 2) * time * time * time / (T * T) + (3 - 2 * v_min) * time * time / T + v_min * time;
+        //mAngle = T * shape_status + (int) angle;
+        if (time <= T / 2) {
+            mAngle += 1+time / T;
+        } else {
+            mAngle +=1+ ((1 / 2)*time - time / T);
+        }
+
+        time += 2f;
+
         if (time > T) {
             time = 0;
             shape_status = (shape_status + 1) % 3;
