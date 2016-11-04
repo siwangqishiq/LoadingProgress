@@ -40,11 +40,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void btn1Click() {
-        mLoadView.restart();
+        mLoadingView.reset();
     }
 
     private void btn2Click() {
-        mLoadView.startLoading();
+        mLoadingView.startLoading();
     }
 
     private float init_y;

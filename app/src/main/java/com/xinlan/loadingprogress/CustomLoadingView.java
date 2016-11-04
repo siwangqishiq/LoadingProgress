@@ -7,6 +7,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.CornerPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
@@ -53,7 +54,7 @@ public class CustomLoadingView extends View {
     private Paint mRightPaint;
     private int loading_shape_status;
     private final long T = 120;
-    private final long wT = 20;
+    private final long wT = 38;
 
 
     public CustomLoadingView(Context context) {
@@ -95,14 +96,9 @@ public class CustomLoadingView extends View {
         p.setStrokeJoin(Paint.Join.ROUND);
         p.setStrokeCap(Paint.Cap.ROUND);
         p.setColor(color);
-        //CornerPathEffect corEffect = new CornerPathEffect(10.0f);
-        //p.setPathEffect(corEffect);
+        CornerPathEffect corEffect = new CornerPathEffect(7.0f);
+        p.setPathEffect(corEffect);
         return p;
-    }
-
-    private void reset() {
-        mStatus = STATUS_NORMAL;
-        resetShapPosition();
     }
 
     private void calShapeData() {
@@ -273,9 +269,9 @@ public class CustomLoadingView extends View {
         //float angle = (v_min - 2) * time * time * time / (T * T) + (3 - 2 * v_min) * time * time / T + v_min * time;
         //mAngle = T * shape_status + (int) angle;
         if (time <= T / 2) {
-            mAngle -= 2 + time / T;
+            mAngle -= 1.5f + time / T;
         } else {
-            mAngle -= 2 + ((1 / 2) * time - time / T);
+            mAngle -= 1.5f + ((1 / 2) * time - time / T);
         }
 
         //更新时间
@@ -349,6 +345,11 @@ public class CustomLoadingView extends View {
         this.mStatus = STATUS_LOADING;
         resetShapPosition();
         postInvalidate();
+    }
+
+    public void reset() {
+        mStatus = STATUS_NORMAL;
+        resetShapPosition();
     }
 
     /**
