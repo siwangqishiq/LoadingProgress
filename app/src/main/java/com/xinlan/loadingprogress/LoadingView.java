@@ -54,6 +54,7 @@ public class LoadingView extends View {
     private PointF[] keyPoints = new PointF[6];
 
     private static final int T = 120;//运动时间周期  120
+    private static final int wT = 20;
 
     public LoadingView(Context context) {
         super(context);
@@ -153,7 +154,7 @@ public class LoadingView extends View {
 
     private void drawLoading(Canvas canvas) {
         canvas.save();
-        canvas.rotate(mAngle + 90, getWidth() / 2, getHeight() / 2);
+        canvas.rotate(mAngle, getWidth() / 2, getHeight() / 2);
         drawUpTrigle(canvas);
         drawDownTrigle(canvas);
         canvas.restore();
@@ -241,21 +242,45 @@ public class LoadingView extends View {
         }//end switch
 
 
-        down_shape_x = ((-2) * (p2_x - p1_x) * time * time * time) / (T * T * T) + (3 * (p2_x - p1_x) * time * time) / (T * T) + p1_x;
-        down_shape_y = ((-2) * (p2_y - p1_y) * time * time * time) / (T * T * T) + (3 * (p2_y - p1_y) * time * time) / (T * T) + p1_y;
+//        float v_m = 20;
+//        float T1 = (3*(p2_x - p1_x)) / 2*v_m;
+//        down_shape_x = ((-2) * (p2_x - p1_x) * time * time * time) / (T1 * T1 * T1) + (3 * (p2_x - p1_x) * time * time) / (T1 *  T1) + p1_x;
+//        down_shape_y = ((-2) * (p2_y - p1_y) * time * time * time) / (T1 * T1* T1) + (3 * (p2_y - p1_y) * time * time) / (T1 * T1) + p1_y;
+//
+//        float T2 = (3*(b_p2_x - b_p1_x)) / 2*v_m;
+//        up_shape_x = ((-2) * (b_p2_x - b_p1_x) * time * time * time) / (T2 * T2 * T2) + (3 * (b_p2_x - b_p1_x) * time * time) / (T * T) + b_p1_x;
+//        up_shape_y = ((-2) * (b_p2_y - b_p1_y) * time * time * time) / (T * T * T) + (3 * (b_p2_y - b_p1_y) * time * time) / (T * T) + b_p1_y;
+        if (time <= wT) {
+            down_shape_x = p1_x;
+            down_shape_y = p1_y;
 
-        up_shape_x = ((-2) * (b_p2_x - b_p1_x) * time * time * time) / (T * T * T) + (3 * (b_p2_x - b_p1_x) * time * time) / (T * T) + b_p1_x;
-        up_shape_y = ((-2) * (b_p2_y - b_p1_y) * time * time * time) / (T * T * T) + (3 * (b_p2_y - b_p1_y) * time * time) / (T * T) + b_p1_y;
+            up_shape_x = b_p1_x;
+            up_shape_y = b_p1_y;
+        } else if (time > wT && time <= T - wT) {
+            long t = T - wT - wT;
+            long ti = time - wT;
 
+            down_shape_x = ((-2) * (p2_x - p1_x) * ti * ti * ti) / (t * t * t) + (3 * (p2_x - p1_x) * ti * ti) / (t * t) + p1_x;
+            down_shape_y = ((-2) * (p2_y - p1_y) * ti * ti * ti) / (t * t * t) + (3 * (p2_y - p1_y) * ti * ti) / (t * t) + p1_y;
+
+            up_shape_x = ((-2) * (b_p2_x - b_p1_x) * ti * ti * ti) / (t * t * t) + (3 * (b_p2_x - b_p1_x) * ti * ti) / (t * t) + b_p1_x;
+            up_shape_y = ((-2) * (b_p2_y - b_p1_y) * ti * ti * ti) / (t * t * t) + (3 * (b_p2_y - b_p1_y) * ti * ti) / (t * t) + b_p1_y;
+        } else {
+            down_shape_x = p2_x;
+            down_shape_y = p2_y;
+
+            up_shape_x = b_p2_x;
+            up_shape_y = b_p2_y;
+        }
 
         //rotate
         float v_min = 0.2f;
         float angle = (v_min - 2) * time * time * time / (T * T) + (3 - 2 * v_min) * time * time / T + v_min * time;
         //mAngle = T * shape_status + (int) angle;
         if (time <= T / 2) {
-            mAngle += 1+time / T;
+            mAngle += 2 + time / T;
         } else {
-            mAngle +=1+ ((1 / 2)*time - time / T);
+            mAngle += 2 + ((1 / 2) * time - time / T);
         }
 
         time += 2f;
